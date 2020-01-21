@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements LoginActivityMVP.
         super.onResume();
         presenter.setView(this);
         presenter.getCurrentUser();
-    }
+     }
 
     @Override
     public String getFirstName() {
