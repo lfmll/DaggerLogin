@@ -69,4 +69,26 @@ public class PresenterUnitTest {
         verify(mockedView,never()).setLastName("Falsa");
         verify(mockedView,times(1)).showUserNotAvailable();
     }
+
+    @Test
+    public void createErrorMessageIfAnyFieldIsEmpty(){
+        //1ro poniendo el campo firstname vacio
+        when(mockedView.getFirstName()).thenReturn("");
+
+        presenter.loginButttonCLicked();
+
+        verify(mockedView,times(1)).getFirstName();
+        verify(mockedView,never()).getLastName();
+        verify(mockedView,times(1)).showInputError();
+
+        //2do poniendo un valor en el campo firstnae y dejando el lastname vacio
+        when(mockedView.getFirstName()).thenReturn("Cuenta");
+        when(mockedView.getLastName()).thenReturn("");
+
+        presenter.loginButttonCLicked();
+
+        verify(mockedView, times(2)).getFirstName();//El metodo se llama 2 veces, una en la prueba anterior y una en la actual
+        verify(mockedView,times(1)).getLastName();//Este metodo se llama por 1ra vez, ya que antes no paso el test booleano
+        verify(mockedView, times(2)).showInputError();//El metodo se llamo antes y de nuevo ahora, en total 2 veces
+    }
 }
