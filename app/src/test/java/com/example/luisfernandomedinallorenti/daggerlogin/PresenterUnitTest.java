@@ -8,6 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
@@ -26,10 +29,10 @@ public class PresenterUnitTest {
 
         user=new User("Cuenta","Falsa");
 
-        //when(mockedModel.getUser()).thenReturn(user);
-
-        when(mockedView.getFirstName()).thenReturn("Cuenta");
-        when(mockedView.getLastName()).thenReturn("Falsa");
+//        when(mockedModel.getUser()).thenReturn(user);
+//
+//        when(mockedView.getFirstName()).thenReturn("Cuenta");
+//        when(mockedView.getLastName()).thenReturn("Falsa");
 
         presenter=new LoginActivityPresenter(mockedModel);
         presenter.setView(mockedView);
@@ -37,6 +40,20 @@ public class PresenterUnitTest {
     @Test
     public void noExistsInteractionWithView(){
         presenter.getCurrentUser();
-        verifyZeroInteractions(mockedView);
+//        verifyZeroInteractions(mockedView);
+
+        verify(mockedView, times(1)).showUserNotAvailable();
+    }
+    @Test
+    public void loadUserFromTheRepoWhenValidUserIsPresent(){
+        when(mockedModel.getUser()).thenReturn(user);
+        presenter.getCurrentUser();
+        //COmprobamos la interactuacion con el modelo de datos
+        verify(mockedModel,times(1)).getUser();
+
+        //Comprobamos la interactuacion con la vista
+        verify(mockedView,times(1)).setFirstName("Cuenta");
+        verify(mockedView,times(1)).setLastName("Falsa");
+        verify(mockedView,never()).showUserNotAvailable();
     }
 }
