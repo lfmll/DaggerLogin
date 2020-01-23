@@ -91,4 +91,22 @@ public class PresenterUnitTest {
         verify(mockedView,times(1)).getLastName();//Este metodo se llama por 1ra vez, ya que antes no paso el test booleano
         verify(mockedView, times(2)).showInputError();//El metodo se llamo antes y de nuevo ahora, en total 2 veces
     }
+
+    @Test
+    public void saveValidUser(){
+        when(mockedView.getFirstName()).thenReturn("Cuenta");
+        when(mockedView.getLastName()).thenReturn("Prueba");
+
+        presenter.loginButttonCLicked();
+
+        //Las llamadas deben ser dobles dentro del condicional y cuando se crea el usuario
+        verify(mockedView,times(2)).getFirstName();
+        verify(mockedView,times(2)).getLastName();
+
+        //Miramos que el modelo persista en el repositorio
+        verify(mockedModel,times(1)).createUser("Cuenta","Prueba");
+
+        //Miramos que se muestre el mensaje de exito l usuario
+        verify(mockedView,times(1)).showUserSaved();
+    }
 }
